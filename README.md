@@ -54,7 +54,19 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ### Generate module and component
 
-`ng g module layout && ng g component layout`
+`$ ng g module layout && ng g component layout`
+
+`$ ng g module layout/routes`
+
+`$ ng g module home && ng g component home`
+
+### Add bootstrap
+
+`$ npm install bootstrap --save`
+
+Import it in **`styles.scss`**
+
+`@import "~bootstrap/scss/bootstrap";`
 
 ## KATA-2: Create a sub-project `create-todo`
 
