@@ -52,6 +52,10 @@ Use the `--prod` flag for a production build.
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
+### Generate module and component
+
+`ng g module layout && ng g component layout`
+
 ## KATA-2: Create a sub-project `create-todo`
 
 ## KATA-3: Create a sub-project `view-todo`
