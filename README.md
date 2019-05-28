@@ -16,7 +16,7 @@ _User would like to edit a todo item which should be displayed on the list as so
 
 ## Kata
 - [KATA-1: Create an application `micro-frontend-todo`](#kata-1-create-an-application-micro-frontend-todo)
-- [KATA-2: Create a sub-project `create-todo`](kata-2)
+- [KATA-2: Create a sub-project `create-todo`](#kata-2)
 - [KATA-3: Create a sub-project `view-todo`](kata-3)
 - [KATA-4: Build and publish](kata-4)
 - [KATA-5: Feature toggle (change the wheels while driving)](kata-5)
