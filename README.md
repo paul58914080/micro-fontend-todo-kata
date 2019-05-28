@@ -70,6 +70,34 @@ Import it in **`styles.scss`**
 
 ## KATA-2: Create a sub-project `create-todo`
 
+The kata is to create a [web component](https://developer.mozilla.org/en-US/docs/Web/Web_Components) for create a todo item. 
+
+We will start by creating a sub application called `create-todo`. The following command will be used to generate the same
+
+`ng g application create-todo --style=scss --prefix=todo --viewEncapsulation=ShadowDom` 
+
+since we are passing the argument as **`--viewEncapsulation=ShadowDom`** you can notice in main.ts the default encapsulation being set to ShadowDom
+
+```js
+platformBrowserDynamic().bootstrapModule(AppModule, {
+  defaultEncapsulation: ViewEncapsulation.ShadowDom
+})
+```
+Delete the default app module & component
+
+### Create the module
+
+`ng g m create-todo-app --flat=true`
+
+### Create the component
+
+`ng g c create-todo-app --module=create-todo-app --selector=create-todo-root --entryComponent=true --flat=true`
+
+### Create the service
+
+`ng g s create-todo-app --flat=true`
+
+
 ## KATA-3: Create a sub-project `view-todo`
 
 ## KATA-4: Build and publish
