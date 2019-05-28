@@ -15,7 +15,7 @@ _User would like to create a todo item which should be displayed on the list as 
 _User would like to edit a todo item which should be displayed on the list as soon as it has been edited. User should not be allowed to edit completed todo item._
 
 ## Kata
-- [KATA-1: Create an application `micro-frontend-todo`](kata-1-create-an-application-micro-frontend-todo)
+- [KATA-1: Create an application `micro-frontend-todo`](micro-frontend-todo#kata-1-create-an-application-micro-frontend-todo)
 - [KATA-2: Create a sub-project `create-todo`](kata-2)
 - [KATA-3: Create a sub-project `view-todo`](kata-3)
 - [KATA-4: Build and publish](kata-4)
