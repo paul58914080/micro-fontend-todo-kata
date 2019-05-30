@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {CreateTodoAppService} from './create-todo-app.service';
 
 @Component({
   selector: 'create-todo-root',
@@ -6,10 +7,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./create-todo-app.component.scss']
 })
 export class CreateTodoAppComponent implements OnInit {
+  todo: string;
 
-  constructor() { }
+  @Output() created = new EventEmitter<void>();
 
-  ngOnInit() {
+  constructor(private createTodoService: CreateTodoAppService) {
   }
 
+  ngOnInit() {
+    this.todo = '';
+  }
+
+  onSubmit() {
+    this.createTodoService.create({completed: false, title: this.todo}).subscribe(() => {
+      this.created.emit();
+      this.todo = '';
+    });
+  }
 }
