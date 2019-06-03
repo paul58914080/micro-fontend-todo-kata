@@ -99,9 +99,11 @@ Delete the default app module & component
 
 You may want to serve the sub-project (micro-frontend) as an individual application as well as a reference module from the main application. For the main application since you already have a bootstrap with `BrowserModule` you do not want to do this again. The bootstrap with BrowserModule is only required when you want to run it locally as a standalone application for the micro-frontend in this case the create-todo. In order to separate these I have the following two modules
 
+### Hosting the component
+
 #### For referencing the module of sub project in the main application
 
-As mentioned earlier, you would **_not_** need `BrowserModule` for this. So create a new module
+As mentioned earlier, you would **_not_** need `BrowserModule` for this. So edit the module
 
 **`create-todo-app.module.ts`**
 ```js
