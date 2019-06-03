@@ -97,6 +97,70 @@ Delete the default app module & component
 
 `ng g s create-todo-app --flat=true`
 
+You may want to serve the sub-project (micro-frontend) as an individual application as well as a reference module from the main application. For the main application since you already have a bootstrap with `BrowserModule` you do not want to do this again. The bootstrap with BrowserModule is only required when you want to run it locally as a standalone application for the micro-frontend in this case the create-todo. In order to separate these I have the following two modules
+
+#### For referencing the module of sub project in the main application
+
+As mentioned earlier, you would **_not_** need `BrowserModule` for this. So create a new module
+
+**`create-todo-app.module.ts`**
+```js
+@NgModule({
+  declarations: [ CreateTodoAppComponent ],
+  providers: [ CreateTodoAppService ],
+  exports: [ CreateTodoAppComponent ],
+  imports: [ CommonModule, FormsModule, HttpClientModule ],
+  entryComponents: [ CreateTodoAppComponent ]
+})
+export class CreateTodoAppModule {
+}
+```
+
+> Note: there is no bootstrap, just an `entryComponent`
+
+**`home.module.ts`**
+```js
+@NgModule({
+  declarations: [HomeComponent],
+  imports: [CommonModule, CreateTodoAppModule],
+  bootstrap: [HomeComponent],
+  entryComponents: [HomeComponent]
+})
+export class HomeModule {
+}
+```
+
+Now you can serve the application which references the sub project `create-todo` as
+
+`$ ng serve`
+
+#### For hosting the sub-project
+
+As mentioned earlier, you would need `BrowserModule` for this. So create a new module
+
+`ng g m create-todo-app-browser --flat=true`
+
+**`create-todo-app-browser.module.ts`**
+```js
+@NgModule({
+  imports: [CreateTodoAppModule, BrowserModule],
+  bootstrap: [CreateTodoAppComponent]
+})
+export class CreateTodoAppModuleWithBrowser {
+}
+```
+
+**`main.ts`** - bootstrap with **`CreateTodoAppModuleWithBrowser`** (the module with browser)
+```js
+platformBrowserDynamic().bootstrapModule(CreateTodoAppModuleWithBrowser, {
+  defaultEncapsulation: ViewEncapsulation.ShadowDom
+})
+  .catch(err => console.error(err));
+```
+
+Now you can serve the sub project `create-todo` individually without the main application as
+
+`$ ng serve create-todo`
 
 ## KATA-3: Create a sub-project `view-todo`
 
