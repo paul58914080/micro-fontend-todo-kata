@@ -5,16 +5,9 @@ import {CreateTodoAppModule} from '../../../projects/create-todo/src/app/create-
 
 @NgModule({
   declarations: [HomeComponent],
-  imports: [
-    CommonModule,
-    CreateTodoAppModule
-  ],
-  bootstrap: [
-    HomeComponent
-  ],
-  entryComponents: [
-    HomeComponent
-  ]
+  imports: [CommonModule, CreateTodoAppModule],
+  bootstrap: [HomeComponent],
+  entryComponents: [HomeComponent]
 })
 export class HomeModule {
 }
