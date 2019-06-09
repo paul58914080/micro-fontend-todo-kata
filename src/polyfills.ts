@@ -56,7 +56,7 @@
  * Zone JS is required by default for Angular itself.
  */
 import 'zone.js/dist/zone';  // Included with Angular CLI.
-import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
+// todo; paul; do we really need this?? import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
 
 /***************************************************************************************************
