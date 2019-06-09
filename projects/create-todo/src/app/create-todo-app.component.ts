@@ -2,9 +2,9 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {CreateTodoAppService} from './create-todo-app.service';
 
 @Component({
-  selector: 'create-todo-root',
+  selector: 'create-todo',
   templateUrl: './create-todo-app.component.html',
-  styleUrls: ['./create-todo-app.component.scss']
+  styleUrls: ['./create-todo-app.component.scss'],
 })
 export class CreateTodoAppComponent implements OnInit {
   todo: string;
