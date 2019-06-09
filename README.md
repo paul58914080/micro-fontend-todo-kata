@@ -164,6 +164,62 @@ Now you can serve the sub project `create-todo` individually without the main ap
 
 `$ ng serve create-todo`
 
+### Making it as an web-component
+
+Step 1: `ng add @angular/elements --project=create-todo`
+
+Step 2: Change the way we bootstrap
+
+```js
+@NgModule({
+  declarations: [ CreateTodoAppComponent ],
+  providers: [ CreateTodoAppService ],
+  exports: [ CreateTodoAppComponent ],
+  imports: [ CommonModule, BrowserModule, FormsModule, HttpClientModule ],
+  entryComponents: [ CreateTodoAppComponent ]
+})
+export class CreateTodoAppModule {
+  constructor(private injector: Injector) {
+  }
+
+  ngDoBootstrap() {
+    const createTodoElement = createCustomElement(CreateTodoAppComponent, {injector: this.injector});
+    customElements.define('create-todo', createTodoElement);
+  }
+}
+```
+
+Step 3: bundler
+
+`npm install --save-dev concat fs-extra`
+
+```js
+const fs = require('fs-extra');
+const concat = require('concat');
+
+(async function build() {
+  const files = [
+    './dist/create-todo/runtime.js',
+    './dist/create-todo/polyfills.js',
+    './dist/create-todo/scripts.js',
+    './dist/create-todo/main.js'
+  ];
+
+  await fs.ensureDir('elements');
+  await concat(files, 'elements/create-todo.js');
+  await fs.copyFile(
+    './dist/create-todo/styles.css',
+    'elements/create-todo.styles.css'
+  );
+})();
+```
+
+Step 4: package.json
+
+`"build:create-todo:elements": "ng build create-todo --prod --output-hashing none && node elements-build/create-todo.js"`
+
+Create a elements
+
 ## KATA-3: Create a sub-project `view-todo`
 
 ## KATA-4: Build and publish
