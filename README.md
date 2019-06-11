@@ -70,6 +70,183 @@ Import it in **`styles.scss`**
 
 ## KATA-2: Create a sub-project `create-todo`
 
+The kata is to create a [web component](https://developer.mozilla.org/en-US/docs/Web/Web_Components) for creating a todo item. 
+
+We will start by creating a sub application called `create-todo`. The following command will be used to generate the same
+
+`$ ng g application create-todo --style=scss --prefix=todo --viewEncapsulation=ShadowDom` 
+
+since we are passing the argument as **`--viewEncapsulation=ShadowDom`** you can notice in main.ts the default encapsulation being set to ShadowDom
+
+```js
+platformBrowserDynamic().bootstrapModule(AppModule, {
+  defaultEncapsulation: ViewEncapsulation.ShadowDom
+})
+```
+Delete the default app module & component
+
+### Create the module
+
+`$ ng g m create-todo-app --flat=true`
+
+### Create the component
+
+`$ ng g c create-todo-app --module=create-todo-app --selector=create-todo --entryComponent=true --flat=true`
+
+### Create the service
+
+`$ ng g s create-todo-app --flat=true`
+
+### Hosting the component
+
+You may want to serve the sub-application (micro-frontend) as an individual application as well as a reference module from the main application. Now we will see how can we accomplish this both. 
+
+#### For referencing the module of sub application in the main application and hosting it
+
+As mentioned earlier, you would **_not_** need `bootstrap` but just `entryComponent` for this. So edit the module
+
+**`create-todo-app.module.ts`**
+```js
+@NgModule({
+  declarations: [ CreateTodoAppComponent ],
+  providers: [ CreateTodoAppService ],
+  exports: [ CreateTodoAppComponent ],
+  imports: [ CommonModule, BrowserModule, FormsModule, HttpClientModule ],
+  entryComponents: [ CreateTodoAppComponent ]
+})
+export class CreateTodoAppModule {
+}
+```
+
+Next, you can directly refer the module of your sub application `CreateTodoAppModule` in the main application's `HomeModule`
+
+**`home.module.ts`**
+```js
+import {CreateTodoAppModule} from '../../../projects/create-todo/src/app/create-todo-app.module';
+
+@NgModule({
+  declarations: [HomeComponent],
+  imports: [CommonModule, CreateTodoAppModule],
+  bootstrap: [HomeComponent],
+  entryComponents: [HomeComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class HomeModule {
+}
+```
+
+> **Note:** `schemas: [CUSTOM_ELEMENTS_SCHEMA]` tells that we can have non-angular element i.e. a web component in this case
+
+`$ ng serve`
+
+#### For hosting the sub application as a standalone application
+
+We need to add a conditional `bootstrap` depending on the environment **`loadBootstrap`** variable. Generally you would have it **`true`** for non-prod and **`false`** for prod
+
+**`create-todo-app.module.ts`**
+```js
+import {environment} from '../environments/environment';
+
+@NgModule({
+  declarations: [ CreateTodoAppComponent ],
+  providers: [ CreateTodoAppService ],
+  exports: [ CreateTodoAppComponent ],
+  imports: [ CommonModule, BrowserModule, FormsModule, HttpClientModule ],
+  entryComponents: [ CreateTodoAppComponent ],
+  bootstrap: environment.loadBootstrap ? [CreateTodoAppComponent]: []
+})
+export class CreateTodoAppModule {
+}
+```
+
+Now you can serve the sub project `create-todo` individually without the main application as
+
+`$ ng serve create-todo`
+
+### Making it as an web-component
+
+#### Add `@angular/elements`
+
+We can add angular elements to our project using the ng add command and pass in the name of our project.
+
+`$ ng add @angular/elements --project=create-todo`
+
+#### Create custom element
+
+To use our component as a reusable widget, we just need to modify the way our **`CreateTodoAppModule`** bootstraps. 
+
+We need to create the custom element and change the way we bootstrap with `ngDoBootstrap()`
+
+```js
+@NgModule({
+  declarations: [ CreateTodoAppComponent ],
+  providers: [ CreateTodoAppService ],
+  exports: [ CreateTodoAppComponent ],
+  imports: [ CommonModule, BrowserModule, FormsModule, HttpClientModule ],
+  entryComponents: [ CreateTodoAppComponent ],
+  bootstrap: environment.loadBootstrap ? [CreateTodoAppComponent]: []
+})
+export class CreateTodoAppModule {
+  constructor(private injector: Injector) {
+  }
+
+  ngDoBootstrap() {
+    const createTodoElement = createCustomElement(CreateTodoAppComponent, {injector: this.injector});
+    customElements.define('create-todo', createTodoElement);
+  }
+}
+```
+
+#### Packaging angular elements
+
+To create a node build script, you'll need to install two more dependencies:
+
+`$ npm install --save-dev concat fs-extra`
+
+At the root of our project, create a folder `elements-build` and then create a file called `create-todo.js` and paste this in
+
+```js
+const fs = require('fs-extra');
+const concat = require('concat');
+
+(async function build() {
+  const files = [
+    './dist/create-todo/runtime.js',
+    './dist/create-todo/polyfills.js',
+    './dist/create-todo/main.js'
+  ];
+
+  await fs.ensureDir('elements');
+  await concat(files, 'elements/create-todo.js');
+  await fs.copyFile(
+    './dist/create-todo/styles.css',
+    'elements/create-todo.styles.css'
+  );
+})();
+```
+
+This script will take all of the scripts that the CLI generates and combine them into a single file. It will also move the CSS file over, though since we're using native encapsulation, this file will be empty.
+
+Finally open up `package.json` and add a new script
+
+```json
+"build:create-todo:elements": "ng build create-todo --prod --output-hashing none && node elements-build/create-todo.js"
+```
+
+#### Hosting it as a web-component
+
+
+```html
+<html>
+  <body>
+    <todo-header></todo-header>
+  </body>
+  <!-- Needed based upon angular vs non-angular projects. We dont need zone.js for angular projects -->
+  <script type="text/javascript" src="https://unpkg.com/zone.js"></script>
+  <script type='text/javascript' src='todo-header.js'></script>
+</html>
+```
+
 ## KATA-3: Create a sub-project `view-todo`
 
 ## KATA-4: Build and publish
