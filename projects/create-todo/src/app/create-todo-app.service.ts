@@ -11,7 +11,7 @@ export class CreateTodoAppService {
   constructor(private httpClient: HttpClient) {
   }
 
-  create(todo: Todo): Observable<void> {
-    return this.httpClient.post<void>('/todo', todo);
+  create(todo: Todo): Observable<any> {
+    return this.httpClient.post('/todo', todo);
   }
 }

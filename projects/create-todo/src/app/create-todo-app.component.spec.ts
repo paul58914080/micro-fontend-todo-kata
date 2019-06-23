@@ -5,6 +5,7 @@ import {CreateTodoAppService} from './create-todo-app.service';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {of} from 'rxjs';
+import {By} from '@angular/platform-browser';
 
 describe('CreateTodoAppComponent', () => {
 
@@ -36,10 +37,10 @@ describe('CreateTodoAppComponent', () => {
 
   it('should have empty text for todo on init', () => {
     component.ngOnInit();
+    fixture.detectChanges();
     expect(component.todo).toBe('');
   });
 
-  /*
   it('should be able to create a todo', () => {
     spyOn(component, 'onSubmit').and.callThrough();
     const inputEl = fixture.debugElement.query(By.css('input[name=todo]'));
@@ -49,13 +50,13 @@ describe('CreateTodoAppComponent', () => {
     fixture.detectChanges();
     expect(component.onSubmit).toHaveBeenCalled();
   });
-  */
 
   it('should be able to create a todo on submit', () => {
     spyOn(component.created, 'emit').and.callThrough();
     spyOn(todoCreateService, 'create').and.returnValue(of({}));
     component.todo = 'Watch Game of Thrones';
     component.onSubmit();
+    fixture.detectChanges();
     expect(todoCreateService.create).toHaveBeenCalledWith({completed: false, title: 'Watch Game of Thrones'});
     expect(component.todo).toEqual('');
     expect(component.created.emit).toHaveBeenCalled();
