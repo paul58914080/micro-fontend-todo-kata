@@ -3,9 +3,9 @@ const concat = require('concat');
 
 (async function build() {
   const files = [
-    './dist/create-todo/runtime.js',
-    './dist/create-todo/polyfills.js',
-    './dist/create-todo/main.js'
+    './dist/create-todo/runtime-es2015.js',
+    './dist/create-todo/polyfills-es2015.js',
+    './dist/create-todo/main-es2015.js'
   ];
 
   await fs.ensureDir('elements');
