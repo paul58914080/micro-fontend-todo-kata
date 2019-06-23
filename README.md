@@ -311,3 +311,53 @@ module.exports = function (config) {
 };
 
 ```
+
+### Including in angular app doesn't show the the web component in production
+
+> Credit: https://medium.com/@sri1980/multiple-angular-elements-apps-loading-in-one-window-7bcc95887ff4
+
+We have this use case that we needed to support for our project which requires that the host system load the first frontend(main app) with angular along with all of its dependencies (.js files) and then allow to load another micro-frontend with the same approach. It sounded like a very easy thing to do but we came across challenges when we started implementing this approach.
+
+The first frontend(main app) loaded fine without any issue. However, for some reason, the second micro-frontend(create-todo) wasn’t rendered although we can clearly see that all the dependencies (.js files) got loaded inside the browser. We didn't even see any error in the browser console so we were not sure what was causing the problem. After spending several hours of analyzing the code, I finally figured out what the issue was with 
+
+#### Problem
+     
+It turns out that we ran into an issue with the global variable **webpackJsonp** when loading multiple angular elements from different frontend apps. When we loaded the first angular , it created **webpackJsonp** variable inside window object. Both frontend and micro-frontend were using the same variable name!
+ 
+#### Solution
+
+To avoid the conflict, we just had to override the default `webpackJsonp` variable name with some unique variable name specific to the angular app or element. Please follow the below steps to implement the solution.
+
+##### 1. Install custom-webpack from angular-builders module
+
+`npm i -D @angular-builders/custom-webpack`
+
+##### 2. Make the below changes in **`angular.json`** in the sub-application section
+
+```json
+"architect": {
+  "build": {
+    "builder": "@angular-builders/custom-webpack:browser",
+    "options": {
+      ...
+      "customWebpackConfig": {
+        "path": "projects/create-todo/extra-webpack.config.js",
+        "mergeStrategies": {
+          "externals": "replace"
+        }
+      }
+    }
+  }
+}
+```
+
+##### 3.Create config file **`extra-webpack.config.js`** under project root folder with below content
+
+```js
+module.exports = {
+  output: {
+    jsonpFunction: 'webpackJsonpCreateTodo',
+    library: 'createTodo'
+  }
+};
+```

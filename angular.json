@@ -152,7 +152,7 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/create-todo",
             "index": "projects/create-todo/src/index.html",
@@ -167,7 +167,13 @@
               "projects/create-todo/src/styles.scss"
             ],
             "scripts": [],
-            "es5BrowserSupport": true
+            "es5BrowserSupport": true,
+            "customWebpackConfig": {
+              "path": "projects/create-todo/extra-webpack.config.js",
+              "mergeStrategies": {
+                "externals": "replace"
+              }
+            }
           },
           "configurations": {
             "production": {
