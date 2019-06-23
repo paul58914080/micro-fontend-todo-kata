@@ -23,6 +23,8 @@ export class CreateTodoAppComponent implements OnInit {
     this.createTodoService.create({completed: false, title: this.todo}).subscribe(() => {
       this.created.emit();
       this.todo = '';
+    }, () => {
+      this.todo = '';
     });
   }
 }

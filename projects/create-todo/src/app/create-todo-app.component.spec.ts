@@ -4,7 +4,7 @@ import {CreateTodoAppComponent} from './create-todo-app.component';
 import {CreateTodoAppService} from './create-todo-app.service';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
-import {of} from 'rxjs';
+import {of, throwError} from 'rxjs';
 import {By} from '@angular/platform-browser';
 
 describe('CreateTodoAppComponent', () => {
@@ -60,5 +60,16 @@ describe('CreateTodoAppComponent', () => {
     expect(todoCreateService.create).toHaveBeenCalledWith({completed: false, title: 'Watch Game of Thrones'});
     expect(component.todo).toEqual('');
     expect(component.created.emit).toHaveBeenCalled();
+  });
+
+  it('should not create a todo when the service has errors', () => {
+    spyOn(component.created, 'emit').and.callThrough();
+    spyOn(todoCreateService, 'create').and.returnValue(throwError(new Error('unable to handle')));
+    component.todo = 'Watch Game of Thrones';
+    component.onSubmit();
+    fixture.detectChanges();
+    expect(todoCreateService.create).toHaveBeenCalledWith({completed: false, title: 'Watch Game of Thrones'});
+    expect(component.todo).toEqual('');
+    expect(component.created.emit).not.toHaveBeenCalled();
   });
 });
