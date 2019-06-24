@@ -23,7 +23,7 @@ export class ViewTodoAppService {
     return this.httpClient.get<Todo[]>('/todo?completed=true');
   }
 
-  update(todo: Todo): Observable<void> {
+  update(todo: Todo): Observable<any> {
     return this.httpClient.put<void>(`/todo/${todo.id}`, todo);
   }
 }
