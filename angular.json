@@ -291,7 +291,7 @@
       "prefix": "todo",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/view-todo",
             "index": "projects/view-todo/src/index.html",
@@ -306,7 +306,13 @@
             "styles": [
               "projects/view-todo/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "projects/view-todo/extra-webpack.config.js",
+              "mergeStrategies": {
+                "externals": "replace"
+              }
+            }
           },
           "configurations": {
             "production": {
