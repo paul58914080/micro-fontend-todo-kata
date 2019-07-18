@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from './todo';
 import {ViewTodoAppService} from './view-todo-app.service';
 
@@ -7,7 +7,7 @@ import {ViewTodoAppService} from './view-todo-app.service';
   templateUrl: './view-todo-app.component.html',
   styleUrls: ['./view-todo-app.component.scss']
 })
-export class ViewTodoAppComponent implements OnInit {
+export class ViewTodoAppComponent implements OnInit, OnDestroy {
 
   todos: Todo[];
   selectedAction: string;
@@ -20,6 +20,9 @@ export class ViewTodoAppComponent implements OnInit {
     this.actions = Object.values(Actions);
     this.selectedAction = Actions.Pending;
     this.getPendingTodo();
+    // add listener to the create-todo-element
+    const createTodoEl = document.querySelector('create-todo-element');
+    createTodoEl.addEventListener('created', this.created);
   }
 
   getPendingTodo() {
@@ -61,6 +64,16 @@ export class ViewTodoAppComponent implements OnInit {
       this.actionChanged(this.selectedAction);
     });
   }
+
+  ngOnDestroy(): void {
+    // remove listener of the create-todo-element
+    const createTodoEl = document.querySelector('create-todo-element');
+    createTodoEl.removeEventListener('created', this.created);
+  }
+
+  created = () => {
+    this.actionChanged(this.selectedAction);
+  };
 }
 
 enum Actions {
