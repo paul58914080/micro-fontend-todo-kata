@@ -169,7 +169,7 @@
             "scripts": [],
             "es5BrowserSupport": true,
             "customWebpackConfig": {
-              "path": "projects/create-todo/extra-webpack.config.js",
+              "path": "projects/create-todo/build/extra-webpack.config.js",
               "mergeStrategies": {
                 "externals": "replace"
               }
@@ -308,7 +308,7 @@
             ],
             "scripts": [],
             "customWebpackConfig": {
-              "path": "projects/view-todo/extra-webpack.config.js",
+              "path": "projects/view-todo/build/extra-webpack.config.js",
               "mergeStrategies": {
                 "externals": "replace"
               }
